@@ -1,37 +1,47 @@
-import { createSignal } from 'solid-js'
-// import solidLogo from './assets/solid.svg'
-// import viteLogo from '/vite.svg'
-import Hello from '@components/Hello'
-// import './App.css'
+import ActiveTabContent from "@components/ActiveTabContent";
+import { state, setState } from "@/store"; // Adjust the import path as needed
+import { closeTab } from "@/store/tabs";
 
 function App() {
-  const [count, setCount] = createSignal(0)
-
   return (
-    <>
-      <Hello/>
-      {/* <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://solidjs.com" target="_blank">
-          <img src={solidLogo} class="logo solid" alt="Solid logo" />
-        </a>
-      </div> */}
-      <h1>Vite + Solid</h1>
-      <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count()}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+    <div class="min-h-screen bg-gray-100 p-8">
+      <div class="max-w-xl mx-auto bg-white shadow-md rounded-md">
+        {/* Tab Navigation */}
+        <div class="border-b">
+          <nav class="flex">
+            {state.tabs.map((tab) => (
+              <div>
+                <button
+                  class={`flex-1 text-center py-2 px-4 ${
+                    state.activeTab === tab.id
+                      ? "border-b-2 border-blue-500 text-blue-500 font-semibold"
+                      : "text-gray-500 hover:text-gray-800"
+                  }`}
+                  onClick={() => setState("activeTab", tab.id)}
+                >
+                  {tab.name}
+                </button>
+
+                <button
+                  onClick={() => closeTab(tab.id)}
+                  class="text-red-500 hover:text-red-700 focus:outline-none"
+                >
+                  &times;
+                </button>
+              </div>
+              
+            ))}
+          </nav>
+        </div>
+
+        {/* Tab Content */}
+        <div class="p-4">
+          <ActiveTabContent/>
+        </div>
+
       </div>
-      <p class="read-the-docs">
-        Click on the Vite and Solid logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
