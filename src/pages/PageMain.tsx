@@ -1,14 +1,27 @@
-import { generatePlot } from "@/store";
+import { generatePlot, state, updateMainData } from "@/store";
 
 export default function PageMain() {
+
+  const activeTab = state.main.find(o => o.id === state.activeTab);
+
   return (
     <div>
-      <h1>Content for PageMain</h1>
+      <h1>Linear</h1>
+      <p>{activeTab?.data.linear.a}</p>
+      <p>{activeTab?.data.linear.b}</p>
+      <h1>Parabora</h1>
+      <p>{activeTab?.data.parabora.a}</p>
+      <p>{activeTab?.data.parabora.b}</p>
+      <p>{activeTab?.data.parabora.c}</p>
       <button
-        class="border p-2 mb-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-        onClick={generatePlot}
+      onclick={() => updateMainData({ linear: { a: 1, b: 2 }})}
       >
-        Generate Random Object
+        update linear params
+      </button>
+      <button
+      onclick={() => generatePlot()}
+      >
+        generate Plot
       </button>
     </div>
   );

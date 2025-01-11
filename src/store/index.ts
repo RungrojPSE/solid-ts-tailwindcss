@@ -1,65 +1,84 @@
+import { AppState, MainItem } from "@/types";
+import { lazy } from "solid-js";
 import { createStore } from "solid-js/store";
-import { JSX, lazy } from "solid-js";
 
-type JSXLazy = (() => JSX.Element) & {
-  preload: () => Promise<{
-      default: () => JSX.Element;
-  }>;
-}
-
-export interface Tab {
-  id: number;
-  name: string;
-  data: any;
-  page: JSXLazy;
-}
-
-interface AppState {
-  activeTab: number;
-  tabs: Tab[];
-}
-
+// Create the store with the defined type
 export const [state, setState] = createStore<AppState>({
-  activeTab: 1,
+  activeTab: 111,
   tabs: [
+    { id: 111, name: "Problem" },
+    { id: 222, name: "Plot" },
+    { id: 333, name: "Table-Linear" },
+  ],
+  main: [
     {
-      id: 1,
-      name: "Main",
-      data: null,
+      id: 111,
+      name: "Problem",
+      data: { linear: { a: 0, b: 2 }, parabora: { a: 1, b: 2, c: 2 } },
       page: lazy(() => import("@/pages/PageMain")),
     },
+  ],
+  plot: [
     {
-      id: 2,
-      name: "Design",
-      data: null,
-      page: lazy(() => import("@/pages/PageDesign")),
+      id: 222,
+      name: "Plot-Linear",
+      data: [
+        { x: 1, y: 2 },
+        { x: 2, y: 4 },
+        { x: 3, y: 6 },
+      ],
+      page: lazy(() => import("@/pages/PagePlot")),
+    },
+  ],
+  table: [
+    {
+      id: 333,
+      name: "Table-Linear",
+      data: [
+        { x: 1, y: 2 },
+        { x: 2, y: 4 },
+        { x: 3, y: 6 },
+      ],
+      page: lazy(() => import("@/pages/PageTable")),
     },
   ],
 });
+
+
+export function updateMainData(updatedFields: Partial<MainItem["data"]>) {
+  
+  const index = state.main.findIndex((item) => item.id === state.activeTab);
+
+  if (index !== -1) {
+    setState("main", index, "data", (data) => ({
+      ...data,
+      ...updatedFields,
+    }));
+  }
+}
 
 export const generatePlot = () => {
   const randomArray = (length: number) =>
     Array.from({ length }, () => Math.floor(Math.random() * 10) + 1);
 
-  const newObject = {
-    id: Date.now(),
-    name: "Plot",
-    data: {
-      x: randomArray(4),
-      y: randomArray(4),
-    },
-    page: lazy(() => import("@/pages/PagePlot")),
-  };
+  const index = state.main.findIndex((item) => item.id === state.activeTab);
 
-  // if to much "Please close some tabs"
-  setState("tabs", (tabs) => [...tabs, newObject]);
-  setState("activeTab", newObject.id);
+  if (index !== -1) {
+    const linear = state.main[index].data.linear
+    const xval = randomArray(3);
+    const data = xval.map(i => ({x: i, y: linear.a + linear.b * i}));
+
+    const newObject = {
+      id: Date.now(),
+      name: "Plot",
+      data: data,
+      page: lazy(() => import("@/pages/PagePlot")),
+    };
+
+    // if to much "Please close some tabs"
+    setState("plot", (plots) => [...plots, newObject]);
+    setState("tabs", (tabs) => [...tabs, {id: newObject.id, name: newObject.name}]);
+    setState("activeTab", newObject.id);
+  }
 };
-
-
-
-// const Page1 = lazy(() => import("@/pages/Page1"));
-// Usage
-// <Page1/>
-
 

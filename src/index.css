@@ -1,3 +1,23 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+
+@layer base {
+  button {
+    @apply 
+    active:scale-90 
+    active:text-sky-600 
+    transition 
+    duration-150 
+    ease-in-out 
+    text-slate-500 
+    dark:text-slate-400 
+    hover:text-sky-500 
+    dark:hover:text-sky-500
+  }
+}
+
+@layer components {
+  
+}
