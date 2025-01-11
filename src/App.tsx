@@ -2,6 +2,8 @@ import ActiveTabContent from "@components/ActiveTabContent";
 import { state, setState } from "@/store"; // Adjust the import path as needed
 import { closeTab } from "@/store/tabs";
 
+// create full page
+
 function App() {
   return (
     <div class="min-h-screen bg-gray-100 p-8">
