@@ -2,9 +2,13 @@ import ActiveTabContent from "@components/ActiveTabContent";
 import { state, setState } from "@/store"; // Adjust the import path as needed
 import { closeTab } from "@/store/tabs";
 
-// create full page
+// update css to show full page
 
 function App() {
+  const isMainTab = (id: number) => {
+    return state.main.map((o) => o.id).includes(id)
+  }
+
   return (
     <div class="min-h-screen bg-gray-100 p-8">
       <div class="max-w-xl mx-auto bg-white shadow-md rounded-md">
@@ -24,23 +28,23 @@ function App() {
                   {tab.name}
                 </button>
 
-                <button
-                  onClick={() => closeTab(tab.id)}
-                  class="text-red-500 hover:text-red-700 focus:outline-none"
-                >
-                  &times;
-                </button>
+                {isMainTab(tab.id) ? null : (
+                  <button
+                    onClick={() => closeTab(tab.id)}
+                    class="text-red-500 hover:text-red-700 focus:outline-none"
+                  >
+                    &times;
+                  </button>
+                )}
               </div>
-              
             ))}
           </nav>
         </div>
 
         {/* Tab Content */}
         <div class="p-4">
-          <ActiveTabContent/>
+          <ActiveTabContent />
         </div>
-
       </div>
     </div>
   );
